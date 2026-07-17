@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopSite4U — Технологии будущего уже сегодня</title>
+    <meta name="description" content="Демонстрация возможностей нашей веб-студии. QuantumRender Engine, FluidGrid Matrix, NebulaMotion Framework и другие proprietary технологии.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#030305',
+                            surface: '#0a0a12',
+                            surfaceLight: '#14141f',
+                            primary: '#00f0ff',
+                            secondary: '#7000ff',
+                            accent: '#fbbf24',
+                            pink: '#ff006e',
+                            green: '#00ff88'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'bounce-slow': 'bounce 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            cursor: none;
+        }
+
+        body {
+            background-color: #030305;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: #00f0ff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 240, 255, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring.hover {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(255, 0, 110, 0.8);
+            background: rgba(255, 0, 110, 0.1);
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #030305;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00f0ff, #7000ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+            margin-bottom: 2rem;
+        }
+
+        .preloader-bar {
+            width: 300px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preloader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00f0ff, #7000ff);
+            animation: loading 2s ease forwards;
+        }
+
+        @keyframes loading {
+            to { width: 100%; }
+        }
+
+        .preloader-percent {
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #00f0ff;
+            font-size: 0.875rem;
+        }
+
+        /* Glass & Effects */
+        .glass {
+            background: rgba(15, 16, 22, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-strong {
+            background: rgba(20, 20, 31, 0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00f0ff 0%, #7000ff 50%, #ff006e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient 6s ease infinite;
+        }
+
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text-green {
+            background: linear-gradient(135deg, #00ff88 0%, #00f0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hero Background */
+        .hero-bg {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(112, 0, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+        }
+
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Glow effects */
+        .glow-cyan {
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.3), 0 0 100px rgba(0, 240, 255, 0.1);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 60px rgba(112, 0, 255, 0.3), 0 0 100px rgba(112, 0, 255, 0.1);
+        }
+
+        .glow-pink {
+            box-shadow: 0 0 60px rgba(255, 0, 110, 0.3), 0 0 100px rgba(255, 0, 110, 0.1);
+        }
+
+        .text-glow-cyan {
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+        }
+
+        .text-glow-purple {
+            text-shadow: 0 0 30px rgba(112, 0, 255, 0.6);
+        }
+
+        /* Tech Card */
+        .tech-card {
+            background: rgba(20, 20, 31, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--card-color, #00f0ff), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--card-color, rgba(0, 240, 255, 0.5));
+            box-shadow: 0 25px 50px -12px var(--card-shadow, rgba(0, 240, 255, 0.25));
+        }
+
+        .tech-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Animated border */
+        .animated-border {
+            position: relative;
+            background: linear-gradient(#0a0a12, #0a0a12) padding-box,
+                        linear-gradient(135deg, #00f0ff, #7000ff, #ff006e, #00f0ff) border-box;
+            border: 2px solid transparent;
+            background-size: 100% 100%, 300% 300%;
+            animation: gradient 4s linear infinite;
+        }
+
+        /* Code block style */
+        .code-block {
+            background: #0a0a12;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-dots {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Progress bars */
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f0ff, #7000ff);
+            border-radius: 4px;
+            position: relative;
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00f0ff, #7000ff, #ff006e);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* Particle canvas */
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 3D tilt effect */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        /* Animated gradient border */
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .rotating-border {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rotating-border::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, #00f0ff, transparent 30%);
+            animation: borderRotate 4s linear infinite;
+        }
+
+        .rotating-border::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: #0a0a12;
+            border-radius: inherit;
+        }
+
+        /* Marquee */
+        .marquee {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            gap: 2rem;
+        }
+
+        .marquee-content {
+            display: flex;
+            gap: 2rem;
+            flex-shrink: 0;
+            animation: scroll 30s linear infinite;
+        }
+
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Section reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stats counter */
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Hover underline effect */
+        .hover-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hover-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #7000ff);
+            transition: width 0.3s ease;
+        }
+
+        .hover-underline:hover::after {
+            width: 100%;
+        }
+
+        /* Neon button */
+        .neon-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .neon-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Mobile cursor disable */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto;
+            }
+            .cursor-dot, .cursor-ring {
+                display: none;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030305;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00f0ff, #7000ff);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #7000ff, #ff006e);
+        }
+
+        /* Typing animation */
+        .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Glow pulse */
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.6); }
+        }
+
+        .glow-pulse {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        /* Matrix background */
+        .matrix-bg {
+            background: 
+                linear-gradient(rgba(3, 3, 5, 0.95), rgba(3, 3, 5, 0.95)),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 240, 255, 0.03) 2px, rgba(0, 240, 255, 0.03) 4px);
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+    <div class="preloader-logo">TopSite4U</div>
+    <div class="preloader-bar"></div>
+    <div class="preloader-percent" id="preloader-percent">0%</div>
+</div>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- Scroll Progress Indicator -->
+<div class="scroll-indicator" id="scroll-indicator"></div>
+
+<!-- Noise Overlay -->
+<div class="noise-overlay"></div>
+
+<!-- Navigation -->
+<nav class="fixed w-full z-50 glass border-b border-white/5 transition-all duration-300" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-lg shadow-brand-primary/30 glow-pulse">
+                    <i class="fa-solid fa-rocket text-white text-lg"></i>
+                </div>
+                <span class="text-2xl font-black tracking-tight font-display">TopSite<span class="gradient-text">4U</span></span>
+            </div>
+            <div class="hidden lg:block">
+                <div class="ml-10 flex items-baseline space-x-8">
+                    <a href="#technologies" class="hover-underline text-gray-300 hover:text-brand-primary transition-colors px-3 py-2 text-sm font-medium">Технологии</a>
+                    <a href="#architecture" class="hover-underline text-gray-300 hover:text-brand-primary transition-colors px-3 py-2 text-sm font-medium">Архитектура</a>
+                    <a href="#performance" class="hover-underline text-gray-300 hover:text-brand-primary transition-colors px-3 py-2 text-sm font-medium">Производительность</a>
+                    <a href="#comparison" class="hover-underline text-gray-300 hover:text-brand-primary transition-colors px-3 py-2 text-sm font-medium">Сравнение</a>
+                    <a href="#cases" class="hover-underline text-gray-300 hover:text-brand-primary transition-colors px-3 py-2 text-sm font-medium">Кейсы</a>
+                </div>
+            </div>
+            <div class="hidden lg:block">
+                <a href="mailto:topsite@atomicmail.io" class="neon-btn bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-2.5 px-6 rounded-full text-sm glow-cyan">
+                    <i class="fa-solid fa-bolt mr-2"></i>Заказать демо
+                </a>
+            </div>
+            <div class="-mr-2 flex lg:hidden">
+                <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="hidden lg:hidden glass border-t border-white/5" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="#technologies" class="text-gray-300 hover:text-brand-primary block px-3 py-2 rounded-md text-base">Технологии</a>
+            <a href="#architecture" class="text-gray-300 hover:text-brand-primary block px-3 py-2 rounded-md text-base">Архитектура</a>
+            <a href="#performance" class="text-gray-300 hover:text-brand-primary block px-3 py-2 rounded-md text-base">Производительность</a>
+            <a href="#comparison" class="text-gray-300 hover:text-brand-primary block px-3 py-2 rounded-md text-base">Сравнение</a>
+            <a href="#cases" class="text-gray-300 hover:text-brand-primary block px-3 py-2 rounded-md text-base">Кейсы</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="relative min-h-screen flex items-center justify-center hero-bg grid-bg overflow-hidden pt-20">
+    <canvas id="particles-canvas"></canvas>
+    
+    <!-- Floating Orbs -->
+    <div class="orb" style="width: 500px; height: 500px; background: #7000ff; top: 10%; left: -10%;"></div>
+    <div class="orb" style="width: 400px; height: 400px; background: #00f0ff; bottom: 10%; right: -5%; animation-delay: 2s;"></div>
+    <div class="orb" style="width: 300px; height: 300px; background: #ff006e; top: 50%; left: 50%; animation-delay: 4s;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-primary/30 text-brand-primary text-sm font-semibold mb-8 animate-float">
+            <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
+            <span class="font-mono">v3.0.0 • Proprietary Tech Stack</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 leading-[1.05] font-display">
+            Технологии, которые <br>
+            <span class="gradient-text text-glow-cyan">меняют правила игры</span>
+        </h1>
+        
+        <p class="mt-6 max-w-3xl mx-auto text-xl md:text-2xl text-gray-400 mb-12 leading-relaxed">
+            Мы не используем шаблонные решения. Наш собственный стек из <span class="text-white font-semibold">8 proprietary-технологий</span> позволяет создавать сайты, которые работают в <span class="text-brand-primary font-bold">10× быстрее</span> конкурентов.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-20">
+            <a href="#technologies" class="neon-btn bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-4 px-10 rounded-full text-lg transition-all glow-cyan flex items-center justify-center gap-2">
+                <i class="fa-solid fa-microchip"></i> Изучить технологии
+            </a>
+            <a href="#performance" class="glass text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-white/10">
+                <i class="fa-solid fa-chart-line"></i> Посмотреть бенчмарки
+            </a>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
+            <div class="glass rounded-2xl p-6 glow-cyan">
+                <div class="text-4xl md:text-5xl font-black text-brand-primary mb-2 counter" data-target="99">0</div>
+                <div class="text-gray-400 text-xs md:text-sm uppercase tracking-wider">PageSpeed Score</div>
+            </div>
+            <div class="glass rounded-2xl p-6 glow-purple">
+                <div class="text-4xl md:text-5xl font-black text-brand-secondary mb-2"><span class="counter" data-target="0.3">0</span>s</div>
+                <div class="text-gray-400 text-xs md:text-sm uppercase tracking-wider">First Contentful Paint</div>
+            </div>
+            <div class="glass rounded-2xl p-6 glow-pink">
+                <div class="text-4xl md:text-5xl font-black text-brand-pink mb-2 counter" data-target="8">0</div>
+                <div class="text-gray-400 text-xs md:text-sm uppercase tracking-wider">Proprietary Techs</div>
+            </div>
+            <div class="glass rounded-2xl p-6" style="box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);">
+                <div class="text-4xl md:text-5xl font-black text-brand-green mb-2"><span class="counter" data-target="100">0</span>%</div>
+                <div class="text-gray-400 text-xs md:text-sm uppercase tracking-wider">Mobile Adaptation</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-500 animate-bounce-slow">
+        <span class="text-xs uppercase tracking-widest">Scroll</span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- MARQUEE SECTION -->
+<section class="py-12 border-y border-white/5 bg-brand-surface overflow-hidden">
+    <div class="marquee">
+        <div class="marquee-content">
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">QUANTUMRENDER</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-primary/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">FLUIDGRID</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-secondary/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">NEBULAMOTION</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-pink/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">HYPERSPEED</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-accent/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">VAULTSHIELD</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-green/20 font-display whitespace-nowrap">•</span>
+        </div>
+        <div class="marquee-content" aria-hidden="true">
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">QUANTUMRENDER</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-primary/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">FLUIDGRID</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-secondary/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">NEBULAMOTION</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-pink/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">HYPERSPEED</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-accent/20 font-display whitespace-nowrap">•</span>
+            <span class="text-4xl md:text-6xl font-black text-white/5 font-display whitespace-nowrap">VAULTSHIELD</span>
+            <span class="text-4xl md:text-6xl font-black text-brand-green/20 font-display whitespace-nowrap">•</span>
+        </div>
+    </div>
+</section>
+
+<!-- TECHNOLOGIES SECTION -->
+<section id="technologies" class="py-24 md:py-32 bg-brand-dark relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(112,0,255,0.08),transparent_50%)]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-primary/30 text-brand-primary text-sm font-semibold mb-6">
+                <i class="fa-solid fa-microchip"></i>
+                <span class="font-mono">OUR PROPRIETARY STACK</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 font-display">
+                <span class="gradient-text">8 proprietary-технологий</span>
+            </h2>
+            <p class="text-gray-400 max-w-3xl mx-auto text-lg md:text-xl">
+                Мы разработали собственный стек технологий, каждый элемент которого оптимизирован для максимальной производительности, безопасности и визуальной выразительности.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Tech 1: QuantumRender Engine -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #00f0ff; --card-shadow: rgba(0, 240, 255, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/30">
+                        <i class="fa-solid fa-atom text-2xl text-brand-primary"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-primary/60">v3.2.1</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">QuantumRender Engine</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Собственный рендеринг-движок с предиктивной загрузкой компонентов. Рендерит UI на 40% быстрее традиционных подходов.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-primary/10 text-brand-primary font-mono">WebGPU</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-primary/10 text-brand-primary font-mono">WASM</span>
+                </div>
+            </div>
+
+            <!-- Tech 2: FluidGrid Matrix -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #7000ff; --card-shadow: rgba(112, 0, 255, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-secondary/10 flex items-center justify-center border border-brand-secondary/30">
+                        <i class="fa-solid fa-table-cells-large text-2xl text-brand-secondary"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-secondary/60">v2.8.0</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">FluidGrid Matrix</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Адаптивная сетка нового поколения. Автоматически подстраивается под любое устройство от smartwatch до 8K-монитора.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-secondary/10 text-brand-secondary font-mono">Container Q.</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-secondary/10 text-brand-secondary font-mono">CSS Houdini</span>
+                </div>
+            </div>
+
+            <!-- Tech 3: NebulaMotion Framework -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #ff006e; --card-shadow: rgba(255, 0, 110, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-pink/10 flex items-center justify-center border border-brand-pink/30">
+                        <i class="fa-solid fa-wand-magic-sparkles text-2xl text-brand-pink"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-pink/60">v4.0.3</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">NebulaMotion Framework</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Фреймворк для создания кинематографичных анимаций с GPU-ускорением. 120 FPS даже на мобильных устройствах.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-pink/10 text-brand-pink font-mono">60+ FPS</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-pink/10 text-brand-pink font-mono">GPU Accel.</span>
+                </div>
+            </div>
+
+            <!-- Tech 4: HyperSpeed Core -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #fbbf24; --card-shadow: rgba(251, 191, 36, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-accent/10 flex items-center justify-center border border-brand-accent/30">
+                        <i class="fa-solid fa-bolt-lightning text-2xl text-brand-accent"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-accent/60">v5.1.0</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">HyperSpeed Core</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Система оптимизации загрузки. Сжимает ресурсы до 85%, использует lazy-loading и предиктивный кэш.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-accent/10 text-brand-accent font-mono">Brotli</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-accent/10 text-brand-accent font-mono">Edge CDN</span>
+                </div>
+            </div>
+
+            <!-- Tech 5: VaultShield Protocol -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #00ff88; --card-shadow: rgba(0, 255, 136, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-green/10 flex items-center justify-center border border-brand-green/30">
+                        <i class="fa-solid fa-shield-halved text-2xl text-brand-green"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-green/60">v3.5.2</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">VaultShield Protocol</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Многоуровневая система безопасности. Защита от DDoS, XSS, CSRF, SQL-инъекций и ботов на уровне ядра.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-green/10 text-brand-green font-mono">Zero-Trust</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-green/10 text-brand-green font-mono">AES-256</span>
+                </div>
+            </div>
+
+            <!-- Tech 6: PrismUI Library -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #00f0ff; --card-shadow: rgba(0, 240, 255, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/30">
+                        <i class="fa-solid fa-palette text-2xl text-brand-primary"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-primary/60">v2.3.0</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">PrismUI Library</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Библиотека из 200+ кастомных компонентов. Каждый элемент оптимизирован для accessibility (WCAG 2.1 AA).
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-primary/10 text-brand-primary font-mono">WCAG 2.1</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-primary/10 text-brand-primary font-mono">200+ UI</span>
+                </div>
+            </div>
+
+            <!-- Tech 7: NeuralFlow AI -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #7000ff; --card-shadow: rgba(112, 0, 255, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-secondary/10 flex items-center justify-center border border-brand-secondary/30">
+                        <i class="fa-solid fa-brain text-2xl text-brand-secondary"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-secondary/60">v1.9.4</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">NeuralFlow AI</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    AI-модуль для персонализации UX. Анализирует поведение пользователей и адаптирует интерфейс в реальном времени.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-secondary/10 text-brand-secondary font-mono">ML Core</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-secondary/10 text-brand-secondary font-mono">Real-time</span>
+                </div>
+            </div>
+
+            <!-- Tech 8: DeepInsight Analytics -->
+            <div class="tech-card rounded-2xl p-8 reveal tilt-card" style="--card-color: #ff006e; --card-shadow: rgba(255, 0, 110, 0.25);">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-brand-pink/10 flex items-center justify-center border border-brand-pink/30">
+                        <i class="fa-solid fa-chart-mixed text-2xl text-brand-pink"></i>
+                    </div>
+                    <span class="font-mono text-xs text-brand-pink/60">v2.1.7</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 font-display text-white">DeepInsight Analytics</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Приватная аналитика без cookies. Отслеживает конверсии, поведение и воронки без нарушения GDPR.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-pink/10 text-brand-pink font-mono">GDPR</span>
+                    <span class="text-xs px-2 py-1 rounded-md bg-brand-pink/10 text-brand-pink font-mono">No Cookies</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITECTURE SECTION -->
+<section id="architecture" class="py-24 md:py-32 bg-brand-surface relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(0,240,255,0.08),transparent_50%)]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-secondary/30 text-brand-secondary text-sm font-semibold mb-6">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span class="font-mono">SYSTEM ARCHITECTURE</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 font-display">
+                Архитектура <span class="gradient-text">под капотом</span>
+            </h2>
+            <p class="text-gray-400 max-w-3xl mx-auto text-lg md:text-xl">
+                Каждая технология работает в синергии, создавая единую экосистему, превосходящую по эффективности любые готовые решения.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            
+            <!-- Architecture Diagram -->
+            <div class="reveal">
+                <div class="glass-strong rounded-2xl p-8 relative">
+                    <div class="absolute -top-4 -left-4 w-20 h-20 bg-brand-primary/20 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-brand-secondary/20 rounded-full blur-2xl"></div>
+                    
+                    <!-- Layers -->
+                    <div class="space-y-4 relative z-10">
+                        <div class="glass rounded-xl p-4 border border-brand-primary/30 hover:border-brand-primary transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-primary/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-display text-brand-primary"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 font-mono">LAYER 01</div>
+                                    <div class="font-bold">Presentation Layer</div>
+                                </div>
+                                <div class="text-xs font-mono text-brand-primary">QuantumRender</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <i class="fa-solid fa-arrow-down text-gray-600"></i>
+                        </div>
+
+                        <div class="glass rounded-xl p-4 border border-brand-secondary/30 hover:border-brand-secondary transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-secondary/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-layer-group text-brand-secondary"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 font-mono">LAYER 02</div>
+                                    <div class="font-bold">Logic & Animation</div>
+                                </div>
+                                <div class="text-xs font-mono text-brand-secondary">NebulaMotion</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <i class="fa-solid fa-arrow-down text-gray-600"></i>
+                        </div>
+
+                        <div class="glass rounded-xl p-4 border border-brand-pink/30 hover:border-brand-pink transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-pink/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-gears text-brand-pink"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 font-mono">LAYER 03</div>
+                                    <div class="font-bold">Business Logic & AI</div>
+                                </div>
+                                <div class="text-xs font-mono text-brand-pink">NeuralFlow</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <i class="fa-solid fa-arrow-down text-gray-600"></i>
+                        </div>
+
+                        <div class="glass rounded-xl p-4 border border-brand-accent/30 hover:border-brand-accent transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-accent/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-database text-brand-accent"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 font-mono">LAYER 04</div>
+                                    <div class="font-bold">Data & Analytics</div>
+                                </div>
+                                <div class="text-xs font-mono text-brand-accent">DeepInsight</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <i class="fa-solid fa-arrow-down text-gray-600"></i>
+                        </div>
+
+                        <div class="glass rounded-xl p-4 border border-brand-green/30 hover:border-brand-green transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-green/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-shield text-brand-green"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 font-mono">LAYER 05</div>
+                                    <div class="font-bold">Security Layer</div>
+                                </div>
+                                <div class="text-xs font-mono text-brand-green">VaultShield</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Example -->
+            <div class="reveal">
+                <div class="code-block p-6 pt-12">
+                    <div class="code-dots">
+                        <div class="code-dot bg-red-500"></div>
+                        <div class="code-dot bg-yellow-500"></div>
+                        <div class="code-dot bg-green-500"></div>
+                    </div>
+                    <pre class="text-gray-300 overflow-x-auto"><code><span class="text-gray-500">// Инициализация стека TopSite4U</span>
+<span class="text-brand-secondary">import</span> { 
+  <span class="text-brand-primary">QuantumRender</span>,
+  <span class="text-brand-primary">FluidGrid</span>,
+  <span class="text-brand-primary">NebulaMotion</span>,
+  <span class="text-brand-primary">HyperSpeed</span>
+} <span class="text-brand-secondary">from</span> <span class="text-brand-green">'@topsite4u/core'</span>;
+
+<span class="text-brand-secondary">const</span> <span class="text-brand-accent">app</span> = <span class="text-brand-secondary">new</span> <span class="text-brand-primary">QuantumRender</span>({
+  <span class="text-gray-400">mode</span>: <span class="text-brand-green">'production'</span>,
+  <span class="text-gray-400">optimization</span>: <span class="text-brand-green">'aggressive'</span>,
+  <span class="text-gray-400">ai</span>: <span class="text-brand-pink">true</span>,
+  <span class="text-gray-400">security</span>: <span class="text-brand-green">'vault-shield-v3'</span>
+});
+
+<span class="text-gray-500">// Запуск с предиктивным кэшем</span>
+<span class="text-brand-secondary">await</span> <span class="text-brand-accent">app</span>.<span class="text-brand-primary">bootstrap</span>();
+<span class="text-brand-secondary">await</span> <span class="text-brand-accent">app</span>.<span class="text-brand-primary">enableHyperSpeed</span>();
+
+console.<span class="text-brand-primary">log</span>(<span class="text-brand-green">'🚀 Ready in 0.3s'</span>);</code></pre>
+                </div>
+
+                <div class="mt-6 grid grid-cols-3 gap-4">
+                    <div class="glass rounded-xl p-4 text-center">
+                        <div class="text-2xl font-black text-brand-primary">40%</div>
+                        <div class="text-xs text-gray-400 mt-1">Быстрее React</div>
+                    </div>
+                    <div class="glass rounded-xl p-4 text-center">
+                        <div class="text-2xl font-black text-brand-secondary">85%</div>
+                        <div class="text-xs text-gray-400 mt-1">Сжатие ресурсов</div>
+                    </div>
+                    <div class="glass rounded-xl p-4 text-center">
+                        <div class="text-2xl font-black text-brand-pink">99.9%</div>
+                        <div class="text-xs text-gray-400 mt-1">Uptime SLA</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- PERFORMANCE SECTION -->
+<section id="performance" class="py-24 md:py-32 bg-brand-dark relative overflow-hidden">
+    <div class="absolute inset-0 matrix-bg opacity-50"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-green/30 text-brand-green text-sm font-semibold mb-6">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span class="font-mono">BENCHMARK RESULTS</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 font-display">
+                Производительность <span class="gradient-text-green">на пределе</span>
+            </h2>
+            <p class="text-gray-400 max-w-3xl mx-auto text-lg md:text-xl">
+                Реальные метрики, полученные в ходе независимого тестирования. Наши сайты стабильно входят в топ-1% по скорости загрузки.
+            </p>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            
+            <!-- Core Web Vitals -->
+            <div class="glass-strong rounded-2xl p-8 reveal">
+                <h3 class="text-2xl font-bold mb-6 font-display flex items-center gap-3">
+                    <i class="fa-solid fa-chart-simple text-brand-primary"></i>
+                    Core Web Vitals
+                </h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">Largest Contentful Paint (LCP)</span>
+                            <span class="text-sm font-mono text-brand-green">1.2s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" data-width="92%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Отлично (≤ 2.5s)</div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">First Input Delay (FID)</span>
+                            <span class="text-sm font-mono text-brand-green">8ms</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" data-width="98%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Отлично (≤ 100ms)</div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">Cumulative Layout Shift (CLS)</span>
+                            <span class="text-sm font-mono text-brand-green">0.02</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" data-width="96%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Отлично (≤ 0.1)</div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">Interaction to Next Paint (INP)</span>
+                            <span class="text-sm font-mono text-brand-green">45ms</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" data-width="94%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Отлично (≤ 200ms)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lighthouse Score -->
+            <div class="glass-strong rounded-2xl p-8 reveal">
+                <h3 class="text-2xl font-bold mb-6 font-display flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-brand-accent"></i>
+                    Google Lighthouse Score
+                </h3>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass rounded-xl p-6 text-center glow-cyan">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                                <circle cx="48" cy="48" r="40" stroke="#00f0ff" stroke-width="8" fill="none" 
+                                    stroke-dasharray="251.2" stroke-dashoffset="25.12" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center text-2xl font-black text-brand-primary">95</div>
+                        </div>
+                        <div class="text-sm font-medium">Performance</div>
+                    </div>
+
+                    <div class="glass rounded-xl p-6 text-center glow-purple">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                                <circle cx="48" cy="48" r="40" stroke="#7000ff" stroke-width="8" fill="none" 
+                                    stroke-dasharray="251.2" stroke-dashoffset="12.56" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center text-2xl font-black text-brand-secondary">98</div>
+                        </div>
+                        <div class="text-sm font-medium">Accessibility</div>
+                    </div>
+
+                    <div class="glass rounded-xl p-6 text-center glow-pink">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                                <circle cx="48" cy="48" r="40" stroke="#ff006e" stroke-width="8" fill="none" 
+                                    stroke-dasharray="251.2" stroke-dashoffset="0" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center text-2xl font-black text-brand-pink">100</div>
+                        </div>
+                        <div class="text-sm font-medium">Best Practices</div>
+                    </div>
+
+                    <div class="glass rounded-xl p-6 text-center" style="box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                                <circle cx="48" cy="48" r="40" stroke="#00ff88" stroke-width="8" fill="none" 
+                                    stroke-dasharray="251.2" stroke-dashoffset="5.02" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center text-2xl font-black text-brand-green">99</div>
+                        </div>
+                        <div class="text-sm font-medium">SEO</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Loading Waterfall -->
+        <div class="glass-strong rounded-2xl p-8 reveal">
+            <h3 class="text-2xl font-bold mb-6 font-display flex items-center gap-3">
+                <i class="fa-solid fa-water text-brand-primary"></i>
+                Waterfall Loading (реальный кейс)
+            </h3>
+            <p class="text-gray-400 mb-6 text-sm">Визуализация загрузки ресурсов нашего типичного проекта:</p>
+
+            <div class="space-y-3 font-mono text-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">HTML Document</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-primary to-brand-secondary rounded" style="width: 8%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-primary">0.1s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">Critical CSS</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[8%] h-full bg-gradient-to-r from-brand-secondary to-brand-pink rounded" style="width: 5%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-secondary">0.15s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">Core JS Bundle</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[13%] h-full bg-gradient-to-r from-brand-pink to-brand-accent rounded" style="width: 12%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-pink">0.28s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">Font Files</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[20%] h-full bg-gradient-to-r from-brand-accent to-brand-green rounded" style="width: 6%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-accent">0.35s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">Hero Image (WebP)</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[25%] h-full bg-gradient-to-r from-brand-green to-brand-primary rounded" style="width: 15%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-green">0.48s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">API Data</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[30%] h-full bg-gradient-to-r from-brand-primary to-brand-secondary rounded" style="width: 8%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-primary">0.58s</div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="w-32 text-gray-400">Lazy Images</div>
+                    <div class="flex-1 h-6 bg-brand-surface rounded relative overflow-hidden">
+                        <div class="absolute top-0 left-[40%] h-full bg-gradient-to-r from-brand-secondary to-brand-pink rounded" style="width: 25%;"></div>
+                    </div>
+                    <div class="w-16 text-right text-brand-secondary">1.2s</div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/5 flex flex-wrap gap-6">
+                <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Load Time</div>
+                    <div class="text-2xl font-black text-brand-primary">1.2s</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Size</div>
+                    <div class="text-2xl font-black text-brand-secondary">187 KB</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Requests</div>
+                    <div class="text-2xl font-black text-brand-pink">23</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Cache Hit Rate</div>
+                    <div class="text-2xl font-black text-brand-green">94%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMPARISON SECTION -->
+<section id="comparison" class="py-24 md:py-32 bg-brand-surface relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-pink/30 text-brand-pink text-sm font-semibold mb-6">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span class="font-mono">VS COMPETITORS</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 font-display">
+                Почему мы <span class="gradient-text">лучше всех</span>
+            </h2>
+            <p class="text-gray-400 max-w-3xl mx-auto text-lg md:text-xl">
+                Объективное сравнение с популярными решениями на рынке. Цифры говорят сами за себя.
+            </p>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="glass-strong rounded-2xl overflow-hidden reveal">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-white/10">
+                            <th class="text-left p-6 font-bold text-gray-400 text-sm uppercase tracking-wider">Метрика</th>
+                            <th class="p-6 font-bold text-gray-400 text-sm uppercase tracking-wider">Tilda</th>
+                            <th class="p-6 font-bold text-gray-400 text-sm uppercase tracking-wider">Wix</th>
+                            <th class="p-6 font-bold text-gray-400 text-sm uppercase tracking-wider">WordPress</th>
+                            <th class="p-6 font-bold text-brand-primary text-sm uppercase tracking-wider bg-brand-primary/5">
+                                <div class="flex items-center gap-2 justify-center">
+                                    <i class="fa-solid fa-crown"></i> TopSite4U
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">PageSpeed Score</td>
+                            <td class="p-6 text-center text-gray-400">65-75</td>
+                            <td class="p-6 text-center text-gray-400">55-70</td>
+                            <td class="p-6 text-center text-gray-400">60-80</td>
+                            <td class="p-6 text-center text-brand-primary font-bold bg-brand-primary/5">95-100</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">Скорость загрузки</td>
+                            <td class="p-6 text-center text-gray-400">2.5-4s</td>
+                            <td class="p-6 text-center text-gray-400">3-5s</td>
+                            <td class="p-6 text-center text-gray-400">2-4s</td>
+                            <td class="p-6 text-center text-brand-primary font-bold bg-brand-primary/5">0.8-1.5s</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">Размер страницы</td>
+                            <td class="p-6 text-center text-gray-400">2-5 MB</td>
+                            <td class="p-6 text-center text-gray-400">3-8 MB</td>
+                            <td class="p-6 text-center text-gray-400">1.5-4 MB</td>
+                            <td class="p-6 text-center text-brand-primary font-bold bg-brand-primary/5">150-300 KB</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">Ежемесячная плата</td>
+                            <td class="p-6 text-center text-gray-400">от 750₽</td>
+                            <td class="p-6 text-center text-gray-400">от 900₽</td>
+                            <td class="p-6 text-center text-gray-400">от 500₽</td>
+                            <td class="p-6 text-center text-brand-green font-bold bg-brand-primary/5">0₽</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">SEO-оптимизация</td>
+                            <td class="p-6 text-center text-gray-400">Базовая</td>
+                            <td class="p-6 text-center text-gray-400">Базовая</td>
+                            <td class="p-6 text-center text-gray-400">Плагинами</td>
+                            <td class="p-6 text-center text-brand-primary font-bold bg-brand-primary/5">Из коробки</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">Код в собственности</td>
+                            <td class="p-6 text-center"><i class="fa-solid fa-xmark text-red-500"></i></td>
+                            <td class="p-6 text-center"><i class="fa-solid fa-xmark text-red-500"></i></td>
+                            <td class="p-6 text-center"><i class="fa-solid fa-check text-green-500"></i></td>
+                            <td class="p-6 text-center bg-brand-primary/5"><i class="fa-solid fa-check text-green-500"></i></td>
+                        </tr>
+                        <tr class="hover:bg-white/[0.02] transition-colors">
+                            <td class="p-6 font-medium">Уникальный дизайн</td>
+                            <td class="p-6 text-center text-gray-400">Шаблоны</td>
+                            <td class="p-6 text-center text-gray-400">Шаблоны</td>
+                            <td class="p-6 text-center text-gray-400">Темы</td>
+                            <td class="p-6 text-center text-brand-primary font-bold bg-brand-primary/5">100% Custom</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Advantages Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <div class="glass rounded-2xl p-6 reveal">
+                <div class="text-4xl font-black gradient-text mb-2">×10</div>
+                <div class="text-sm text-gray-400">Быстрее загружаются наши сайты по сравнению с шаблонами Tilda/Wix</div>
+            </div>
+            <div class="glass rounded-2xl p-6 reveal">
+                <div class="text-4xl font-black gradient-text mb-2">×15</div>
+                <div class="text-sm text-gray-400">Меньше размер страницы — выше конверсия и ниже стоимость рекламы</div>
+            </div>
+            <div class="glass rounded-2xl p-6 reveal">
+                <div class="text-4xl font-black gradient-text mb-2">∞</div>
+                <div class="text-sm text-gray-400">Ваш сайт принадлежит вам. Никаких ежемесячных платежей платформе</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CASES SECTION -->
+<section id="cases" class="py-24 md:py-32 bg-brand-dark relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,110,0.08),transparent_50%)]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-accent/30 text-brand-accent text-sm font-semibold mb-6">
+                <i class="fa-solid fa-trophy"></i>
+                <span class="font-mono">SUCCESS STORIES</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 font-display">
+                Кейсы <span class="gradient-text-gold">наших клиентов</span>
+            </h2>
+            <p class="text-gray-400 max-w-3xl mx-auto text-lg md:text-xl">
+                Реальные результаты, которые получили наши клиенты после запуска сайта на нашем стеке.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Case 1 -->
+            <div class="glass-strong rounded-2xl overflow-hidden reveal group">
+                <div class="h-48 bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-surface to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="text-xs font-mono text-brand-primary mb-1">E-COMMERCE</div>
+                        <h3 class="text-2xl font-bold">Магазин электроники</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <div class="text-2xl font-black text-brand-primary">+247%</div>
+                            <div class="text-xs text-gray-400">Конверсия</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-secondary">0.9s</div>
+                            <div class="text-xs text-gray-400">Загрузка</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-pink">98</div>
+                            <div class="text-xs text-gray-400">PageSpeed</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400">Переезд с Tilda на наш стек. Скорость загрузки выросла в 3 раза, конверсия — в 2.5 раза.</p>
+                </div>
+            </div>
+
+            <!-- Case 2 -->
+            <div class="glass-strong rounded-2xl overflow-hidden reveal group">
+                <div class="h-48 bg-gradient-to-br from-brand-pink/20 to-brand-accent/20 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-surface to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="text-xs font-mono text-brand-pink mb-1">SAAS</div>
+                        <h3 class="text-2xl font-bold">CRM-система</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <div class="text-2xl font-black text-brand-primary">+180%</div>
+                            <div class="text-xs text-gray-400">Регистрации</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-secondary">1.1s</div>
+                            <div class="text-xs text-gray-400">Загрузка</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-pink">96</div>
+                            <div class="text-xs text-gray-400">PageSpeed</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400">Landing для SaaS-продукта. Скорость привлечения лидов выросла на 180% за первый месяц.</p>
+                </div>
+            </div>
+
+            <!-- Case 3 -->
+            <div class="glass-strong rounded-2xl overflow-hidden reveal group">
+                <div class="h-48 bg-gradient-to-br from-brand-green/20 to-brand-primary/20 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-surface to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="text-xs font-mono text-brand-green mb-1">CORPORATE</div>
+                        <h3 class="text-2xl font-bold">Юридическая фирма</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <div class="text-2xl font-black text-brand-primary">+320%</div>
+                            <div class="text-xs text-gray-400">Заявок</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-secondary">0.8s</div>
+                            <div class="text-xs text-gray-400">Загрузка</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-brand-pink">99</div>
+                            <div class="text-xs text-gray-400">PageSpeed</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400">Корпоративный сайт на 7 страниц. Количество входящих заявок выросло в 3.2 раза.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Client Logos -->
+        <div class="mt-20 reveal">
+            <div class="text-center text-sm text-gray-500 uppercase tracking-widest mb-8">Нам доверяют</div>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 items-center opacity-60">
+                <div class="text-center text-2xl font-black text-gray-500 font-display">NEXUS</div>
+                <div class="text-center text-2xl font-black text-gray-500 font-display">VERTEX</div>
+                <div class="text-center text-2xl font-black text-gray-500 font-display">ORBITAL</div>
+                <div class="text-center text-2xl font-black text-gray-500 font-display">QUANTUM</div>
+                <div class="text-center text-2xl font-black text-gray-500 font-display">PRISM</div>
+                <div class="text-center text-2xl font-black text-gray-500 font-display">HELIX</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TECH STACK VISUALIZATION -->
+<section class="py-24 md:py-32 bg-brand-surface relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-4xl md:text-5xl font-black mb-6 font-display">
+                Наш <span class="gradient-text">технологический стек</span>
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Используем лучшие инструменты индустрии в комбинации с собственными разработками
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-html5 text-4xl text-orange-500 mb-3"></i>
+                <div class="text-sm font-bold">HTML5</div>
+                <div class="text-xs text-gray-500 mt-1">Семантика</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-css3-alt text-4xl text-blue-500 mb-3"></i>
+                <div class="text-sm font-bold">CSS3</div>
+                <div class="text-xs text-gray-500 mt-1">Стили</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-js text-4xl text-yellow-400 mb-3"></i>
+                <div class="text-sm font-bold">JavaScript</div>
+                <div class="text-xs text-gray-500 mt-1">ES2024</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-react text-4xl text-cyan-400 mb-3"></i>
+                <div class="text-sm font-bold">React</div>
+                <div class="text-xs text-gray-500 mt-1">UI Library</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-node-js text-4xl text-green-500 mb-3"></i>
+                <div class="text-sm font-bold">Node.js</div>
+                <div class="text-xs text-gray-500 mt-1">Backend</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-figma text-4xl text-pink-500 mb-3"></i>
+                <div class="text-sm font-bold">Figma</div>
+                <div class="text-xs text-gray-500 mt-1">Design</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-git-alt text-4xl text-orange-600 mb-3"></i>
+                <div class="text-sm font-bold">Git</div>
+                <div class="text-xs text-gray-500 mt-1">VCS</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-brands fa-docker text-4xl text-blue-400 mb-3"></i>
+                <div class="text-sm font-bold">Docker</div>
+                <div class="text-xs text-gray-500 mt-1">Container</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-solid fa-cloud text-4xl text-purple-400 mb-3"></i>
+                <div class="text-sm font-bold">Cloudflare</div>
+                <div class="text-xs text-gray-500 mt-1">CDN</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-solid fa-database text-4xl text-green-400 mb-3"></i>
+                <div class="text-sm font-bold">PostgreSQL</div>
+                <div class="text-xs text-gray-500 mt-1">Database</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-solid fa-bolt text-4xl text-yellow-500 mb-3"></i>
+                <div class="text-sm font-bold">Vite</div>
+                <div class="text-xs text-gray-500 mt-1">Build Tool</div>
+            </div>
+            <div class="glass rounded-xl p-6 text-center hover:border-brand-primary/50 hover:-translate-y-1 transition-all reveal">
+                <i class="fa-solid fa-wind text-4xl text-cyan-500 mb-3"></i>
+                <div class="text-sm font-bold">Tailwind</div>
+                <div class="text-xs text-gray-500 mt-1">CSS Framework</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-24 md:py-32 relative overflow-hidden">
+    <div class="absolute inset-0 hero-bg"></div>
+    <div class="absolute inset-0 grid-bg opacity-30"></div>
+    <div class="orb" style="width: 600px; height: 600px; background: #7000ff; top: 20%; left: -10%;"></div>
+    <div class="orb" style="width: 500px; height: 500px; background: #00f0ff; bottom: 10%; right: -10%; animation-delay: 3s;"></div>
+
+    <div class="max-w-5xl mx-auto px-4 text-center relative z-10 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-primary/30 text-brand-primary text-sm font-semibold mb-8">
+            <i class="fa-solid fa-rocket"></i>
+            <span>Готовы начать?</span>
+        </div>
+
+        <h2 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 font-display leading-tight">
+            Давайте создадим <br>
+            <span class="gradient-text">ваш следующий сайт</span>
+        </h2>
+        
+        <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            Напишите нам, и мы бесплатно проведем аудит вашего текущего решения и покажем, как наш стек может ускорить ваш бизнес.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+            <a href="mailto:topsite@atomicmail.io?subject=Заявка%20на%20бесплатный%20аудит%20(TopSite4U)&body=Здравствуйте!%0A%0AХочу%20получить%20бесплатный%20аудит%20моего%20текущего%20сайта%20и%20узнать,%20как%20ваш%20стек%20может%20ускорить%20мой%20бизнес.%0A%0AМой%20сайт:%20%0AМои%20контактные%20данные:%20" class="neon-btn bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-5 px-12 rounded-full text-lg transition-all glow-cyan flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> Получить бесплатный аудит
+            </a>
+            <a href="https://github.com/topsite4u" target="_blank" class="glass text-white font-bold py-5 px-12 rounded-full text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-white/10">
+                <i class="fa-brands fa-github"></i> Наш GitHub
+            </a>
+        </div>
+
+        <div class="glass rounded-2xl p-8 max-w-2xl mx-auto">
+            <p class="text-gray-400 text-sm uppercase tracking-widest mb-3">Прямая связь:</p>
+            <a href="mailto:topsite@atomicmail.io" class="text-2xl md:text-3xl font-black gradient-text hover:opacity-80 transition-all break-all">
+                topsite@atomicmail.io
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-brand-dark border-t border-white/5 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center">
+                        <i class="fa-solid fa-rocket text-white"></i>
+                    </div>
+                    <span class="text-2xl font-black font-display">TopSite<span class="gradient-text">4U</span></span>
+                </div>
+                <p class="text-gray-400 max-w-sm mb-4">
+                    Мы создаем сайты будущего, используя собственные технологии, которые работают быстрее, надежнее и красивее любых готовых решений.
+                </p>
+                <a href="mailto:topsite@atomicmail.io" class="text-brand-primary hover:text-white transition-colors font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-envelope"></i> topsite@atomicmail.io
+                </a>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-white font-display">Технологии</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#technologies" class="hover:text-brand-primary transition-colors">QuantumRender</a></li>
+                    <li><a href="#technologies" class="hover:text-brand-primary transition-colors">FluidGrid Matrix</a></li>
+                    <li><a href="#technologies" class="hover:text-brand-primary transition-colors">NebulaMotion</a></li>
+                    <li><a href="#technologies" class="hover:text-brand-primary transition-colors">HyperSpeed Core</a></li>
+                    <li><a href="#technologies" class="hover:text-brand-primary transition-colors">VaultShield Protocol</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-white font-display">Компания</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#architecture" class="hover:text-brand-primary transition-colors">Архитектура</a></li>
+                    <li><a href="#performance" class="hover:text-brand-primary transition-colors">Производительность</a></li>
+                    <li><a href="#cases" class="hover:text-brand-primary transition-colors">Кейсы</a></li>
+                    <li><a href="https://github.com/topsite4u" target="_blank" class="hover:text-brand-primary transition-colors"><i class="fa-brands fa-github mr-2"></i>GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">© 2026 TopSite4U. Все технологии защищены.</p>
+            <p class="text-gray-600 text-xs max-w-2xl text-center md:text-right font-mono">
+                Built with proprietary stack • QuantumRender v3.2.1 • NebulaMotion v4.0.3
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+    // Preloader
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        const percentEl = document.getElementById('preloader-percent');
+        let percent = 0;
+        const interval = setInterval(() => {
+            percent += Math.random() * 15;
+            if (percent >= 100) {
+                percent = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                }, 500);
+            }
+            percentEl.textContent = Math.floor(percent) + '%';
+        }, 100);
+    });
+
+    // Custom Cursor
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        cursorRing.style.left = ringX + 'px';
+        cursorRing.style.top = ringY + 'px';
+        cursorRing.style.transform = `translate(-50%, -50%)`;
+        requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Cursor hover effect
+    document.querySelectorAll('a, button, .tech-card, .tilt-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+    });
+
+    // Scroll Progress Indicator
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        document.getElementById('scroll-indicator').style.width = scrollPercent + '%';
+
+        // Navbar effect
+        const navbar = document.getElementById('navbar');
+        if (scrollTop > 50) {
+            navbar.classList.add('shadow-lg', 'bg-brand-dark/90');
+        } else {
+            navbar.classList.remove('shadow-lg', 'bg-brand-dark/90');
+        }
+    });
+
+    // Reveal on Scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                
+                // Animate progress bars
+                entry.target.querySelectorAll('.progress-fill').forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    if (width) {
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 200);
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    // Counter Animation
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseFloat(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const startTime = performance.now();
+                const isFloat = target % 1 !== 0;
+
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    const current = target * easeProgress;
+                    
+                    counter.textContent = isFloat ? current.toFixed(1) : Math.floor(current);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = isFloat ? target.toFixed(1) : target;
+                    }
+                }
+                requestAnimationFrame(updateCounter);
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(el => {
+        counterObserver.observe(el);
+    });
+
+    // 3D Tilt Effect for Tech Cards
+    document.querySelectorAll('.tilt-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+    });
+
+    // Particles Canvas
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.radius = Math.random() * 2 + 0.5;
+            this.color = ['#00f0ff', '#7000ff', '#ff006e'][Math.floor(Math.random() * 3)];
+            this.opacity = Math.random() * 0.5 + 0.2;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.opacity;
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        const count = window.innerWidth < 768 ? 30 : 80;
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function connectParticles() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 150) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = particles[i].color;
+                    ctx.globalAlpha = (1 - distance / 150) * 0.2;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        
+        connectParticles();
+        ctx.globalAlpha = 1;
+        
+        requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const target = document.querySelector(targetId);
+            if (target) {
+                e.preventDefault();
+                const offset = 80;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+            }
+        });
+    });
+
+    // Parallax effect for orbs
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('.orb').forEach((orb, index) => {
+            const speed = (index + 1) * 0.1;
+            orb.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+
+    // Easter egg: Konami code
+    let konamiCode = [];
+    const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    document.addEventListener('keydown', (e) => {
+        konamiCode.push(e.key);
+        if (konamiCode.length > konamiSequence.length) {
+            konamiCode.shift();
+        }
+        if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+            document.body.style.animation = 'gradient 2s ease infinite';
+            alert('🚀 Вы нашли секретный код! TopSite4U — технологии будущего!');
+            konamiCode = [];
+        }
+    });
+
+    console.log('%c🚀 TopSite4U', 'font-size: 40px; font-weight: bold; background: linear-gradient(135deg, #00f0ff, #7000ff); color: white; padding: 10px 20px; border-radius: 8px;');
+    console.log('%cBuilt with proprietary tech stack', 'font-size: 14px; color: #00f0ff;');
+    console.log('%cJoin our team: topsite@atomicmail.io', 'font-size: 12px; color: #7000ff;');
+</script>
+
+</body>
+</html>
